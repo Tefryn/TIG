@@ -1,8 +1,10 @@
 find_package(ZLIB REQUIRED)
+find_package(OpenSSL REQUIRED)
 
 add_library(utilities
   hex.cpp
-  zlib_utils.cpp
+  sha1.cpp
+  zlib.cpp
 )
 
 target_include_directories(utilities PUBLIC
@@ -10,5 +12,6 @@ target_include_directories(utilities PUBLIC
 )
 
 target_link_libraries(utilities PUBLIC
+  OpenSSL::Crypto
   ZLIB::ZLIB
 )
