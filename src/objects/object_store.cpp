@@ -39,15 +39,13 @@ std::array<uint8_t, 20> writeObject(ObjectType type,
   auto hash = computeSha1(store);
   auto path = objectPath(tigDir, hash);
 
-  if (std::filesystem::exists(path))
-    return hash;
+  if (std::filesystem::exists(path)) return hash;
 
   std::filesystem::create_directories(path.parent_path());
 
   auto compressed = zlibCompress(store);
   std::ofstream file(path, std::ios::binary);
-  if (!file)
-    throw std::runtime_error("cannot write object: " + path.string());
+  if (!file) throw std::runtime_error("cannot write object: " + path.string());
   file.write(reinterpret_cast<const char *>(compressed.data()),
              static_cast<std::streamsize>(compressed.size()));
 
@@ -59,8 +57,7 @@ std::vector<uint8_t> readObject(const std::array<uint8_t, 20> &hash,
                                 ObjectType &outType) {
   auto path = objectPath(tigDir, hash);
   std::ifstream file(path, std::ios::binary);
-  if (!file)
-    throw std::runtime_error("object not found: " + hashToHex(hash));
+  if (!file) throw std::runtime_error("object not found: " + hashToHex(hash));
 
   std::vector<uint8_t> compressed(std::istreambuf_iterator<char>(file), {});
   auto raw = zlibDecompress(compressed);

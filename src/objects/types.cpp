@@ -17,13 +17,9 @@ std::string_view typeName(ObjectType type) {
 }
 
 ObjectType parseTypeName(std::string_view s) {
-  if (s == "blob")
-    return ObjectType::Blob;
-  if (s == "tree")
-    return ObjectType::Tree;
-  if (s == "commit")
-    return ObjectType::Commit;
-  if (s == "tag")
-    return ObjectType::Tag;
+  if (s == "blob") return ObjectType::Blob;
+  if (s == "tree") return ObjectType::Tree;
+  if (s == "commit") return ObjectType::Commit;
+  if (s == "tag") return ObjectType::Tag;
   throw std::runtime_error("unknown object type: " + std::string(s));
 }

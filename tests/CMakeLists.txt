@@ -5,6 +5,7 @@ add_executable(tig_tests
   test_types.cpp
   test_object_store.cpp
   test_blob.cpp
+  test_tree.cpp
 )
 
 target_link_libraries(tig_tests PRIVATE
