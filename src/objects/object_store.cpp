@@ -20,21 +20,23 @@ static std::vector<uint8_t> buildStore(ObjectType type,
   return store;
 }
 
-std::filesystem::path objectPath(const std::filesystem::path &tigDir,
-                                 const std::array<uint8_t, 20> &hash) {
+std::filesystem::path
+objectPath(const std::filesystem::path &tigDir,
+           const std::array<uint8_t, kSha1HashSize> &hash) {
   std::string hex = hashToHex(hash);
   return tigDir / "objects" / hex.substr(0, 2) / hex.substr(2);
 }
 
-std::array<uint8_t, 20> hashObject(ObjectType type,
-                                   std::span<const uint8_t> data) {
+std::array<uint8_t, kSha1HashSize> hashObject(ObjectType type,
+                                              std::span<const uint8_t> data) {
   auto store = buildStore(type, data);
   return computeSha1(store);
 }
 
-std::array<uint8_t, 20> writeObject(ObjectType type,
-                                    std::span<const uint8_t> data,
-                                    const std::filesystem::path &tigDir) {
+std::array<uint8_t, kSha1HashSize>
+writeObject(ObjectType type,
+            std::span<const uint8_t> data,
+            const std::filesystem::path &tigDir) {
   auto store = buildStore(type, data);
   auto hash = computeSha1(store);
   auto path = objectPath(tigDir, hash);
@@ -52,7 +54,7 @@ std::array<uint8_t, 20> writeObject(ObjectType type,
   return hash;
 }
 
-std::vector<uint8_t> readObject(const std::array<uint8_t, 20> &hash,
+std::vector<uint8_t> readObject(const std::array<uint8_t, kSha1HashSize> &hash,
                                 const std::filesystem::path &tigDir,
                                 ObjectType &outType) {
   auto path = objectPath(tigDir, hash);

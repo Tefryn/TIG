@@ -1,5 +1,7 @@
 #pragma once
 
+#include "utilities/sha1.hpp"
+
 #include <array>
 #include <cstdint>
 #include <string>
@@ -13,11 +15,17 @@ using Blob = std::vector<uint8_t>;
 std::string_view typeName(ObjectType type);
 ObjectType parseTypeName(std::string_view s);
 
+namespace FileMode {
+inline constexpr uint32_t RegularFile = 0100644;
+inline constexpr uint32_t ExecutableFile = 0100755;
+inline constexpr uint32_t SymbolicLink = 0120000;
+inline constexpr uint32_t Directory = 0040000;
+} // namespace FileMode
+
 struct TreeEntry {
-  uint32_t mode; // 0100644 - regular, 0100755 - executable, 0120000 - symbolic,
-                 // 0040000 - subdir
+  uint32_t mode;
   std::string name;
-  std::array<uint8_t, 20> hash;
+  std::array<uint8_t, kSha1HashSize> hash;
 };
 
 struct Identity {
@@ -28,8 +36,9 @@ struct Identity {
 };
 
 struct Commit {
-  std::array<uint8_t, 20> tree;
-  std::vector<std::array<uint8_t, 20>> parents; // empty for root commit
+  std::array<uint8_t, kSha1HashSize> tree;
+  std::vector<std::array<uint8_t, kSha1HashSize>>
+      parents; // empty for root commit
   Identity author;
   Identity committer;
   std::string message;

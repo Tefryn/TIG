@@ -10,7 +10,7 @@
 // with '/' so they interleave correctly with files of similar names.
 // e.g. dir "foo" sorts after file "foo" but before file "foobar".
 static std::string sortKey(const TreeEntry &e) {
-  return e.mode == 040000 ? e.name + '/' : e.name;
+  return e.mode == FileMode::Directory ? e.name + '/' : e.name;
 }
 
 std::vector<uint8_t> serializeTree(const std::vector<TreeEntry> &entries) {
@@ -22,7 +22,7 @@ std::vector<uint8_t> serializeTree(const std::vector<TreeEntry> &entries) {
 
   std::vector<uint8_t> out;
   for (const auto &e : sorted) {
-    // "<mode_octal> <name>\0<20-raw-bytes>"
+    // "<mode_octal> <name>\0<kSha1HashSize raw bytes>"
     std::ostringstream header;
     header << std::oct << e.mode << ' ' << e.name << '\0';
     std::string h = header.str();
@@ -57,13 +57,14 @@ std::vector<TreeEntry> parseTree(std::span<const uint8_t> raw) {
     std::string name(raw.begin() + pos, raw.begin() + nullPos);
     pos = nullPos + 1;
 
-    // Read the 20-byte raw hash.
-    if (pos + 20 > raw.size())
+    // Read the raw hash.
+    if (pos + kSha1HashSize > raw.size())
       throw std::runtime_error("corrupt tree: truncated entry hash");
 
-    std::array<uint8_t, 20> hash;
-    std::copy(raw.begin() + pos, raw.begin() + pos + 20, hash.begin());
-    pos += 20;
+    std::array<uint8_t, kSha1HashSize> hash;
+    std::copy(
+        raw.begin() + pos, raw.begin() + pos + kSha1HashSize, hash.begin());
+    pos += kSha1HashSize;
 
     entries.push_back({mode, std::move(name), hash});
   }
@@ -71,12 +72,13 @@ std::vector<TreeEntry> parseTree(std::span<const uint8_t> raw) {
   return entries;
 }
 
-std::array<uint8_t, 20> writeTree(const std::vector<TreeEntry> &entries,
-                                  const std::filesystem::path &tigDir) {
+std::array<uint8_t, kSha1HashSize>
+writeTree(const std::vector<TreeEntry> &entries,
+          const std::filesystem::path &tigDir) {
   return writeObject(ObjectType::Tree, serializeTree(entries), tigDir);
 }
 
-std::vector<TreeEntry> readTree(const std::array<uint8_t, 20> &hash,
+std::vector<TreeEntry> readTree(const std::array<uint8_t, kSha1HashSize> &hash,
                                 const std::filesystem::path &tigDir) {
   ObjectType type;
   auto raw = readObject(hash, tigDir, type);

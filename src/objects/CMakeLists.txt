@@ -3,6 +3,7 @@ add_library(objects
   object_store.cpp
   blob.cpp
   tree.cpp
+  commit.cpp
 )
 
 target_include_directories(objects PUBLIC

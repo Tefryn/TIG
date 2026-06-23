@@ -12,12 +12,13 @@ Blob parseBlob(std::span<const uint8_t> raw) {
   return {raw.begin(), raw.end()};
 }
 
-std::array<uint8_t, 20> writeBlob(std::span<const uint8_t> content,
-                                  const std::filesystem::path &tigDir) {
+std::array<uint8_t, kSha1HashSize>
+writeBlob(std::span<const uint8_t> content,
+          const std::filesystem::path &tigDir) {
   return writeObject(ObjectType::Blob, serializeBlob(content), tigDir);
 }
 
-Blob readBlob(const std::array<uint8_t, 20> &hash,
+Blob readBlob(const std::array<uint8_t, kSha1HashSize> &hash,
               const std::filesystem::path &tigDir) {
   ObjectType type;
   auto raw = readObject(hash, tigDir, type);

@@ -3,10 +3,9 @@
 #include <openssl/evp.h>
 #include <stdexcept>
 
-std::array<uint8_t, 20> computeSha1(std::span<const uint8_t> data) {
+std::array<uint8_t, kSha1HashSize> computeSha1(std::span<const uint8_t> data) {
   EVP_MD_CTX *ctx = EVP_MD_CTX_new();
-  if (!ctx)
-    throw std::runtime_error("EVP_MD_CTX_new failed");
+  if (!ctx) throw std::runtime_error("EVP_MD_CTX_new failed");
 
   if (EVP_DigestInit_ex(ctx, EVP_sha1(), nullptr) != 1 ||
       EVP_DigestUpdate(ctx, data.data(), data.size()) != 1) {
@@ -14,9 +13,9 @@ std::array<uint8_t, 20> computeSha1(std::span<const uint8_t> data) {
     throw std::runtime_error("SHA-1 digest update failed");
   }
 
-  std::array<uint8_t, 20> hash;
+  std::array<uint8_t, kSha1HashSize> hash;
   unsigned int len = 0;
-  if (EVP_DigestFinal_ex(ctx, hash.data(), &len) != 1 || len != 20) {
+  if (EVP_DigestFinal_ex(ctx, hash.data(), &len) != 1 || len != kSha1HashSize) {
     EVP_MD_CTX_free(ctx);
     throw std::runtime_error("SHA-1 digest finalization failed");
   }

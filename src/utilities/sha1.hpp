@@ -4,4 +4,6 @@
 #include <cstdint>
 #include <span>
 
-std::array<uint8_t, 20> computeSha1(std::span<const uint8_t> data);
+inline constexpr size_t kSha1HashSize = 20;
+
+std::array<uint8_t, kSha1HashSize> computeSha1(std::span<const uint8_t> data);
