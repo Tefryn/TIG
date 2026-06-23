@@ -1,0 +1,54 @@
+---
+Language: Cpp
+Standard: c++20
+BasedOnStyle: LLVM
+
+# LLVM uses 2-space indentation, no tabs
+IndentWidth: 2
+UseTab: Never
+ColumnLimit: 80
+
+# K&R braces — opening brace on same line
+BreakBeforeBraces: Attach
+
+# Pointer/reference attached to name: int *Ptr
+PointerAlignment: Right
+ReferenceAlignment: Right
+
+# Short constructs
+AllowShortFunctionsOnASingleLine: All
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortLoopsOnASingleLine: true
+AllowShortLambdasOnASingleLine: All
+
+# Spacing
+SpaceBeforeParens: ControlStatements
+SpaceAfterTemplateKeyword: true
+SpacesInAngles: Never
+
+# Includes
+SortIncludes: CaseInsensitive
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex:    '^"'     # project headers
+    Priority: 1
+  - Regex:    '^<'     # system / library headers
+    Priority: 2
+
+# Breaking
+AlignAfterOpenBracket: Align
+BinPackArguments: false
+BinPackParameters: false
+BreakConstructorInitializers: BeforeColon
+BreakInheritanceList: BeforeColon
+ContinuationIndentWidth: 4
+
+# Namespaces
+NamespaceIndentation: None
+CompactNamespaces: false
+
+# Misc
+Cpp11BracedListStyle: true
+ReflowComments: true
+MaxEmptyLinesToKeep: 1
+InsertNewlineAtEOF: true
