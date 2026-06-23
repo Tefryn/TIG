@@ -19,4 +19,5 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 
 add_subdirectory(src/utilities)
+add_subdirectory(src/objects)
 add_subdirectory(tests)

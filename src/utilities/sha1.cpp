@@ -3,7 +3,7 @@
 #include <openssl/evp.h>
 #include <stdexcept>
 
-std::array<uint8_t, 20> sha1(std::span<const uint8_t> data) {
+std::array<uint8_t, 20> computeSha1(std::span<const uint8_t> data) {
   EVP_MD_CTX *ctx = EVP_MD_CTX_new();
   if (!ctx)
     throw std::runtime_error("EVP_MD_CTX_new failed");
