@@ -8,6 +8,8 @@
 
 enum class ObjectType { Blob, Tree, Commit, Tag };
 
+using Blob = std::vector<uint8_t>;
+
 std::string_view typeName(ObjectType type);
 ObjectType parseTypeName(std::string_view s);
 

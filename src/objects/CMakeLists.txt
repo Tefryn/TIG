@@ -1,6 +1,7 @@
 add_library(objects
   types.cpp
   object_store.cpp
+  blob.cpp
 )
 
 target_include_directories(objects PUBLIC
